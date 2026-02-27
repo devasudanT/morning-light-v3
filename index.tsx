@@ -173,7 +173,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<View>('list');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [language, setLanguage] = useState<Language>(
-    (localStorage.getItem('devotionLanguage') as Language) || 'EN'
+    (localStorage.getItem('devotionLanguage') as Language) || 'TA'
   );
   const [theme, setTheme] = useState<Theme>(
     (localStorage.getItem('devotionTheme') as Theme) || 'light'
