@@ -168,6 +168,7 @@ const renderContentWithHighlight = (text: string, highlight: string): React.Reac
 
 
 const DISABLE_NAVIGATION = true; // Temporarily disable next/prev buttons
+const DISABLE_FOOTER_AUDIO = true; // Disable audio controls in footer island bar
 
 const App: React.FC = () => {
   const [view, setView] = useState<View>('list');
@@ -605,6 +606,11 @@ const App: React.FC = () => {
 
   // Audio control functions
   const handleAudioToggle = useCallback(() => {
+    if (DISABLE_FOOTER_AUDIO) {
+      // Audio plays are disabled in footer island bar
+      return;
+    }
+
     const audioUrl = meta?.audioUrl;
     if (!audioUrl) return;
 
@@ -719,7 +725,7 @@ const App: React.FC = () => {
               </svg>
             </a>
           )}
-          {meta?.audioUrl && meta.audioUrl !== '#' && meta.audioUrl !== '' && (
+          {meta?.audioUrl && meta.audioUrl !== '#' && meta.audioUrl !== '' && !DISABLE_FOOTER_AUDIO && (
             <button
               className="icon-btn"
               aria-label="Play Audio"
