@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting to Morning Light</title>
+    <meta http-equiv="refresh" content="0;url=/" />
+    <script>
+      // On static hosts (e.g., GitHub Pages), paths like /01-01-2025-EN may return 404.
+      // This 404 page redirects to the SPA root with the original path in hash.
+      const path = window.location.pathname + window.location.search + window.location.hash;
+      if (path && path !== '/') {
+        // We include route in hash for client to parse and avoid server 404 on refresh.
+        window.location.replace('/#' + path);
+      } else {
+        window.location.replace('/');
+      }
+    </script>
+  </head>
+  <body>
+    Redirecting to the app... If not redirected automatically, <a id="link" href="/">click here</a>.
+    <script>
+      document.getElementById('link').href = '/#' + (window.location.pathname + window.location.search + window.location.hash);
+    </script>
+  </body>
+</html>

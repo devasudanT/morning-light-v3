@@ -198,12 +198,40 @@ const App: React.FC = () => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [showMorningLightList, setShowMorningLightList] = useState(false);
 
-  // Function to parse URL pathname into date and language
-  const parsePathname = (pathname: string): { date: Date | null; language: Language | null } => {
-    if (pathname === '/' || pathname === '' || pathname === '/index.html') return { date: null, language: null };
+  // Function to normalize and parse route into date and language
+  const normalizeRoute = (route: string): string => {
+    let normalized = route || '';
 
-    // Remove leading slash and split by dashes
-    const slug = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+    // support hash routing fallback (e.g. #/dd-MM-yyyy-EN)
+    if (normalized.startsWith('#')) {
+      normalized = normalized.slice(1);
+    }
+
+    if (normalized.startsWith('/')) {
+      normalized = normalized.slice(1);
+    }
+
+    // preserve nothing for home/index
+    if (normalized === '' || normalized === 'index.html') {
+      return '/';
+    }
+
+    return `/${normalized}`;
+  };
+
+  const getCurrentRoutePath = (): string => {
+    const hash = window.location.hash;
+    if (hash && hash !== '#') {
+      return normalizeRoute(hash);
+    }
+    return normalizeRoute(window.location.pathname);
+  };
+
+  const parsePathname = (pathname: string): { date: Date | null; language: Language | null } => {
+    const path = normalizeRoute(pathname);
+    if (path === '/') return { date: null, language: null };
+
+    const slug = path.startsWith('/') ? path.slice(1) : path;
     const parts = slug.split('-');
     if (parts.length < 4) return { date: null, language: null };
 
@@ -228,9 +256,12 @@ const App: React.FC = () => {
     return `/${day}-${month}-${year}-${language}`;
   };
 
-  // Function to navigate with History API
+  // Function to navigate with history API and keep pathname canonical
   const navigateTo = (path: string) => {
-    window.history.pushState(null, '', path);
+    const normalized = normalizeRoute(path);
+    if (window.location.pathname !== normalized || window.location.hash !== '') {
+      window.history.pushState(null, '', normalized);
+    }
   };
 
   const dateInputRef = useRef<HTMLInputElement>(null);
@@ -263,9 +294,16 @@ const App: React.FC = () => {
     fetchManifest();
   }, []);
 
-  // Initialize from URL pathname on app load
+  // Initialize from URL pathname/hash on app load
   useEffect(() => {
-    const { date, language: pathnameLang } = parsePathname(window.location.pathname);
+    const route = getCurrentRoutePath();
+    const { date, language: pathnameLang } = parsePathname(route);
+
+    // Convert hash-based fallback route to canonical pathname
+    if (window.location.hash && route !== window.location.pathname) {
+      window.history.replaceState(null, '', route);
+    }
+
     if (date) {
       setCurrentDate(date);
       setView('detail');
@@ -276,7 +314,8 @@ const App: React.FC = () => {
   // Add popstate listener for browser navigation (back/forward buttons)
   useEffect(() => {
     const handlePopState = () => {
-      const { date, language: pathnameLang } = parsePathname(window.location.pathname);
+      const route = getCurrentRoutePath();
+      const { date, language: pathnameLang } = parsePathname(route);
       if (date) {
         setCurrentDate(date);
         setView('detail');
