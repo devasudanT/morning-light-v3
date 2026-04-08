@@ -46,13 +46,13 @@ body {
 #root {
   max-width: 800px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0.1rem;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0;
   margin-top: 160px; /* Account for fixed header (80px) + sub-header (80px) */
 }
 
@@ -68,7 +68,7 @@ body {
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
   z-index: 1000;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   box-sizing: border-box;
 }
 
@@ -134,7 +134,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
   z-index: 999;
@@ -178,6 +178,8 @@ body {
   align-items: center;
   gap: 1rem;
   width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .date-nav {
@@ -331,6 +333,10 @@ input:checked + .slider:before {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
+main.content-area {
+  padding-top: 0;
+}
+
 .loading {
   text-align: center;
   padding: 3rem 0;
@@ -364,6 +370,7 @@ input:checked + .slider:before {
   font-size: 1.8rem;
   margin-bottom: 0.25rem;
   text-align: center;
+  margin-top: 30px;
 }
 
 .devotion-meta h3 {
@@ -636,12 +643,13 @@ input:checked + .slider:before {
   }
 
   .app-container {
+    gap: 0;
     margin-top: 128px; /* Adjusted for mobile header heights: 64px + 64px */
   }
 
   .controls {
     gap: 1.25rem;
-    padding: 1rem 0;
+    padding: 0;
   }
 
   .date-nav {
@@ -653,7 +661,7 @@ input:checked + .slider:before {
   /* Adjust mobile layout after removing font resizer and action buttons */
   .controls {
     gap: 1rem;
-    padding: 0.75rem 0;
+    padding: 0;
   }
 
   .language-toggle {
